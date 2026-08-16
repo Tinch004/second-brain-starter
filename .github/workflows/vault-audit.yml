@@ -1,0 +1,47 @@
+name: Vault audit
+
+on:
+  push:
+    branches: [master, main]
+  pull_request:
+    branches: [master, main]
+
+jobs:
+  orphans-and-broken-links:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Buscar huerfanas y links rotos
+        run: |
+          find . -name "*.md" -not -path "*/.obsidian/*" -not -path "*/.github/*" \
+            | sed -E 's#.*/##; s/\.md$//' | sort -u > /tmp/notes.txt
+          grep -rhoE '\[\[[^]|#]+' . --include="*.md" \
+            | sed -E 's/\[\[//; s#.*/##' | sort -u > /tmp/links.txt
+
+          ORPHANS=$(comm -23 /tmp/notes.txt /tmp/links.txt | grep -vE '^(AGENTS|CLAUDE|README|SETUP)$' || true)
+          BROKEN=$(comm -13 /tmp/notes.txt /tmp/links.txt || true)
+
+          if [ -n "$ORPHANS" ]; then
+            echo "::error::Notas huerfanas (sin ningun link entrante):"
+            echo "$ORPHANS"
+          fi
+          if [ -n "$BROKEN" ]; then
+            echo "::error::Links rotos (apuntan a algo que no existe):"
+            echo "$BROKEN"
+          fi
+          if [ -n "$ORPHANS" ] || [ -n "$BROKEN" ]; then
+            exit 1
+          fi
+          echo "Vault limpio: 0 huerfanas, 0 links rotos."
+
+      - name: Verificar nombres de indice de carpeta
+        run: |
+          # mindepth 2: el README.md de la raiz es la landing page de GitHub, no una nota del vault — excepcion valida.
+          BAD=$(find . -mindepth 2 -iname "README.md" -not -path "*/.obsidian/*" -not -path "*/.github/*" || true)
+          if [ -n "$BAD" ]; then
+            echo "::error::Encontrado README.md dentro de una carpeta — el vault usa <Carpeta>-index.md, nunca README.md:"
+            echo "$BAD"
+            exit 1
+          fi
+          echo "OK: ningun README.md suelto dentro de una carpeta del vault."

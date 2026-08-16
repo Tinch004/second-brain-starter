@@ -1,3 +1,7 @@
+---
+id: {{id-congelado-al-crear-el-proyecto-nunca-cambia}}
+---
+
 # {{proyecto}} — estado
 
 Actualizado: {{fecha}}
