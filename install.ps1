@@ -34,7 +34,7 @@ if (-not $obsidianExe) {
 
 # 3) Clonar (o pull si ya existe) el vault starter
 if (Test-Path $VaultPath) {
-  Write-Host "Ya existe $VaultPath — hago git pull en vez de clonar." -ForegroundColor Yellow
+  Write-Host "Ya existe $VaultPath - hago git pull en vez de clonar." -ForegroundColor Yellow
   git -C $VaultPath pull
 } else {
   Write-Host "Clonando vault starter en $VaultPath..." -ForegroundColor Yellow
@@ -53,23 +53,21 @@ Write-Host "Skill 'update-project-memory' instalada en Claude Code y Codex." -Fo
 
 Write-Host ""
 Write-Host "== Automatico listo. Ahora los pasos manuales (Obsidian no deja saltearlos) ==" -ForegroundColor Cyan
-Write-Host @"
-
-1. Abri Obsidian -> 'Open folder as vault' -> elegi: $VaultPath
-
-2. Configuracion -> Community plugins -> desactiva "Restricted mode" si esta activo.
-
-3. Community plugins -> Browse -> instalar y activar, uno por uno:
-   - "Local REST API" (autor: coddingtonbear) -- el MCP que conecta Claude Code/Codex al vault
-   - "Claudian" (autor: Yishen Tu) -- chat con Claude Code/Codex desde dentro de Obsidian
-   - "Mini Tray" (autor: Damon) -- opcional, minimiza a la bandeja en vez de cerrar
-   - "Git" (autor: Vinzent03) -- opcional, botones de commit/pull/push desde la UI
-   - "Dataview" -- opcional, consultas dinamicas sobre tus notas
-
-4. Configuracion del plugin "Local REST API" -> copia la API key que genera solo.
-
-5. En este mismo directorio, corre (con la key del paso 4):
-   .\connect-mcp.ps1 -ApiKey "TU_API_KEY_ACA" -VaultPath "$VaultPath"
-
-Con eso, Claude Code y Codex ya leen y escriben tu vault. Documentacion completa: SETUP.md
-"@ -ForegroundColor White
+Write-Host ""
+Write-Host "1. Abri Obsidian -> 'Open folder as vault' -> elegi: $VaultPath"
+Write-Host ""
+Write-Host "2. Configuracion -> Community plugins -> desactiva 'Restricted mode' si esta activo."
+Write-Host ""
+Write-Host "3. Community plugins -> Browse -> instalar y activar, uno por uno:"
+Write-Host "   - 'Local REST API' (autor: coddingtonbear) -- el MCP que conecta Claude Code/Codex al vault"
+Write-Host "   - 'Claudian' (autor: Yishen Tu) -- chat con Claude Code/Codex desde dentro de Obsidian"
+Write-Host "   - 'Mini Tray' (autor: Damon) -- opcional, minimiza a la bandeja en vez de cerrar"
+Write-Host "   - 'Git' (autor: Vinzent03) -- opcional, botones de commit/pull/push desde la UI"
+Write-Host "   - 'Dataview' -- opcional, consultas dinamicas sobre tus notas"
+Write-Host ""
+Write-Host "4. Configuracion del plugin 'Local REST API' -> copia la API key que genera solo."
+Write-Host ""
+Write-Host "5. En este mismo directorio, corre (con la key del paso 4):"
+Write-Host "   .\connect-mcp.ps1 -ApiKey 'TU_API_KEY_ACA' -VaultPath '$VaultPath'"
+Write-Host ""
+Write-Host "Con eso, Claude Code y Codex ya leen y escriben tu vault. Documentacion completa: SETUP.md"

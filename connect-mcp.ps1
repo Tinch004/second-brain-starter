@@ -16,11 +16,11 @@ Write-Host "== Conectando MCP del vault a Claude Code y Codex ==" -ForegroundCol
 
 # Claude Code
 if (Get-Command claude -ErrorAction SilentlyContinue) {
-  claude mcp remove obsidian-vault 2>$null | Out-Null
+  try { claude mcp remove obsidian-vault } catch {}
   claude mcp add --scope user --transport http obsidian-vault $mcpUrl --header "Authorization: Bearer $ApiKey"
   Write-Host "Claude Code: conectado." -ForegroundColor Green
 } else {
-  Write-Host "Claude Code CLI no encontrado en PATH — salteado. Instalalo y volve a correr este script si lo necesitas." -ForegroundColor Yellow
+  Write-Host "Claude Code CLI no encontrado en PATH - salteado. Instalalo y volve a correr este script si lo necesitas." -ForegroundColor Yellow
 }
 
 # Codex
@@ -28,13 +28,13 @@ $codexConfig = "$HOME\.codex\config.toml"
 if (Test-Path $codexConfig) {
   $content = Get-Content $codexConfig -Raw
   if ($content -match "\[mcp_servers\.obsidian-vault\]") {
-    Write-Host "Codex: ya tenia una entrada 'obsidian-vault' en config.toml — no la piso. Edita $codexConfig a mano si haces falta cambiar la key." -ForegroundColor Yellow
+    Write-Host "Codex: ya tenia una entrada 'obsidian-vault' en config.toml - no la piso. Edita $codexConfig a mano si haces falta cambiar la key." -ForegroundColor Yellow
   } else {
     Add-Content $codexConfig "`n[mcp_servers.obsidian-vault]`nurl = `"$mcpUrl`"`nhttp_headers = { `"Authorization`" = `"Bearer $ApiKey`" }`n"
     Write-Host "Codex: conectado ($codexConfig actualizado)." -ForegroundColor Green
   }
 } else {
-  Write-Host "No existe $codexConfig todavia — Codex no esta instalado/inicializado en esta maquina. Salteado." -ForegroundColor Yellow
+  Write-Host "No existe $codexConfig todavia - Codex no esta instalado/inicializado en esta maquina. Salteado." -ForegroundColor Yellow
 }
 
 Write-Host ""
