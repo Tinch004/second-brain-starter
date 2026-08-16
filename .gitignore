@@ -1,0 +1,9 @@
+# API keys / claves privadas por-maquina, nunca al repo
+.obsidian/plugins/*/data.json
+
+# estado de UI local, no aporta y genera ruido en diffs
+.obsidian/workspace.json
+.obsidian/workspace-mobile.json
+
+# config y cache de sesiones de Claudian (si lo instalas), local a esta maquina
+.claudian/
