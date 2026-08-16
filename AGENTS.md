@@ -11,7 +11,8 @@ Este vault de Obsidian es la memoria centralizada de tus proyectos más las skil
 
 ## Reglas duras de este vault (resumen — el detalle está en la skill)
 
-- Ningún archivo de proyecto se llama `_status.md`/`decisions.md`/`context.md` a secas — siempre `<proyecto>-<tipo>.md`.
+- Ningún archivo de proyecto se llama `_status.md`/`todos.md`/`decisions.md`/`context.md` a secas — siempre `<proyecto>-<tipo>.md`.
+- Nunca secretos reales en el vault (API keys, tokens, private keys, passwords) — ni en `_raw/`: redactar antes de guardar. El CI (`vault-audit.yml`) es un hard gate: si falla por esto, corregir/redactar, nunca bypassear. Si marca un falso positivo (ej. un placeholder tipo `API_KEY=your_key_here` pegado de un `.env.example`), reescribir esa línea para que no matchee (ej. `<tu-api-key>` sin comillas) en vez de bypassear.
 - Ningún índice de carpeta se llama `README.md` — siempre `<Carpeta>-index.md`.
 - Nunca hardcodear cantidades ("9 skills", "3 proyectos") en un índice — quedan viejas.
 - Skills en `02-Skills/` van agrupadas por dominio en subcarpetas, no en lista plana.

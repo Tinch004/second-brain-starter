@@ -2,7 +2,7 @@
 
 [[Home]] ·
 
-Los proyectos de programación activos que este vault trackea. Cada uno vive en su propia carpeta `01-Projects/<proyecto>/` con `<proyecto>-status.md` (estado actual, punto de entrada), `<proyecto>-decisions.md` (decisiones de arquitectura) y, si tuvo sesiones de trabajo real, `<proyecto>-context.md` (log de continuidad). Los módulos/componentes reales de cada proyecto son sub-nodos en `<proyecto>/modules/`, indexados desde el propio `-status.md` — no hay un índice separado de módulos, el `-status.md` ya cumple ese rol.
+Los proyectos de programación activos que este vault trackea. Cada uno vive en su propia carpeta `01-Projects/<proyecto>/` con `<proyecto>-status.md` (estado actual, punto de entrada), `<proyecto>-todos.md` (tareas activas/bloqueadas/hechas en checkboxes, consultable con Dataview), `<proyecto>-decisions.md` (decisiones de arquitectura) y, si tuvo sesiones de trabajo real, `<proyecto>-context.md` (log de continuidad). Los módulos/componentes reales de cada proyecto son sub-nodos en `<proyecto>/modules/`, indexados desde el propio `-status.md` — no hay un índice separado de módulos, el `-status.md` ya cumple ese rol.
 
 ## Proyectos
 _(vacío — se llena con el primer proyecto real)_

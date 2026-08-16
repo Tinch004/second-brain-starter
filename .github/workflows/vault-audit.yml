@@ -47,3 +47,17 @@ jobs:
             exit 1
           fi
           echo "OK: ningun README.md suelto dentro de una carpeta del vault."
+
+      - name: Buscar secretos en el vault
+        run: |
+          PATTERN="AKIA[0-9A-Z]{16}|-----BEGIN[A-Z ]*PRIVATE KEY-----|gh[pousr]_[A-Za-z0-9]{20,}|xox[baprs]-[A-Za-z0-9-]{10,}|sk_live_[A-Za-z0-9]{20,}|(api[_-]?key|secret|token|password)[[:space:]]*[:=][[:space:]]*[\"'][^\"']{8,}[\"']"
+
+          HITS=$(find . -name "*.md" -not -path "*/.obsidian/*" -not -path "*/.github/*" -print0 \
+            | xargs -0 grep -inE "$PATTERN" || true)
+
+          if [ -n "$HITS" ]; then
+            echo "::error::Posibles secretos encontrados (nunca deben vivir en el vault, ni en _raw/):"
+            echo "$HITS"
+            exit 1
+          fi
+          echo "OK: ningun patron de secreto detectado."
