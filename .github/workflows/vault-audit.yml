@@ -16,7 +16,9 @@ jobs:
         run: |
           find . -name "*.md" -not -path "*/.obsidian/*" -not -path "*/.github/*" \
             | sed -E 's#.*/##; s/\.md$//' | sort -u > /tmp/notes.txt
-          grep -rhoE '\[\[[^]|#]+' . --include="*.md" \
+          find . -name "*.md" -not -path "*/.obsidian/*" -not -path "*/.github/*" -print0 \
+            | xargs -0 sed -E 's/`[^`]*`//g' \
+            | grep -oE '\[\[[^]|#]+' \
             | sed -E 's/\[\[//; s#.*/##' | sort -u > /tmp/links.txt
 
           ORPHANS=$(comm -23 /tmp/notes.txt /tmp/links.txt | grep -vE '^(AGENTS|CLAUDE|README|SETUP)$' || true)

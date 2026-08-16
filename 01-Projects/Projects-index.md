@@ -8,4 +8,4 @@ Los proyectos de programación activos que este vault trackea. Cada uno vive en 
 _(vacío — se llena con el primer proyecto real)_
 
 ## Cómo se agrega uno nuevo
-Ver skill [[update-project-memory|update-project-memory]] — tiene el proceso paso a paso y las reglas de nombre.
+Ver skill [[SKILL|update-project-memory]] — tiene el proceso paso a paso y las reglas de nombre.

@@ -17,4 +17,4 @@ _(vacío — a medida que agregues proyectos, van acá con un link a su `<proyec
 - [[Raw-index|_raw]] — fuente cruda inmutable, antes de compilarse en una nota
 
 ## Regla de nombres
-Cada archivo de proyecto se llama `<proyecto>-status.md` / `-decisions.md` / `-context.md` (nunca `_status.md` a secas) — único en todo el vault, se identifica solo en el grafo y en el buscador. Cada índice de carpeta se llama `<Carpeta>-index.md`, nunca `README.md` a secas — mismo motivo. Cómo armar un proyecto nuevo: skill [[update-project-memory|update-project-memory]].
+Cada archivo de proyecto se llama `<proyecto>-status.md` / `-decisions.md` / `-context.md` (nunca `_status.md` a secas) — único en todo el vault, se identifica solo en el grafo y en el buscador. Cada índice de carpeta se llama `<Carpeta>-index.md`, nunca `README.md` a secas — mismo motivo. Cómo armar un proyecto nuevo: skill [[SKILL|update-project-memory]].
