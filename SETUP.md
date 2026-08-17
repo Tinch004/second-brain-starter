@@ -56,8 +56,8 @@ Sesión nueva de Claude Code o Codex, en cualquier proyecto: *"Leé el Home del 
 
 ## Cómo se usa día a día
 
-- **No hay comandos que memorizar.** Al terminar una sesión de trabajo real, el agente actualiza el vault solo (skill `update-project-memory` — lee `skill/update-project-memory/SKILL.md` en este repo para el detalle completo de reglas).
-- Cada proyecto que trackees necesita, en su propio repo, un `AGENTS.md` (con `CLAUDE.md` como symlink al mismo archivo) que diga "la memoria vive en el vault, leer `<VAULT_PATH>/01-Projects/<proyecto>/<proyecto>-status.md` antes de tocar nada".
+- **No hay comandos que memorizar.** Al terminar una sesión de trabajo real, el agente actualiza el vault solo (skill `update-project-memory` — lee `skill/update-project-memory/SKILL.md` en este repo para el detalle completo de reglas). La misma skill, al trackear un proyecto por primera vez, le crea automáticamente su `AGENTS.md` desde `_templates/project-agents-template.md` — no hace falta escribirlo a mano.
+- Cada proyecto que trackees necesita, en su propio repo, ese `AGENTS.md` (con `CLAUDE.md` como symlink al mismo archivo) apuntando al vault. Es también la señal que usa el agente para saber en qué proyecto está parado — ver "Detección del proyecto actual" en la skill.
 - El vault mismo puede ser (recomendado) su propio repo git — así lo tenés en más de una máquina y con backup real. `git init`, creá un repo privado en tu cuenta, `git remote add origin ...`, primer commit. La skill ya trae las reglas de pull-antes-de-leer y commit+push-al-guardar.
 
 ## Estructura de este starter

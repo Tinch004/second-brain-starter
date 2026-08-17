@@ -6,6 +6,8 @@ id: {{id-congelado-al-crear-el-proyecto-nunca-cambia}}
 
 Actualizado: {{fecha}}
 
+*Si el proyecto es un repo de código, sumar acá dos líneas `Repo:` y `Remote:` con el path local y la URL entre backticks (omitir si no aplica) — es lo que permite detectar el proyecto actual por cwd/remote, ver sección "Detección del proyecto actual" de la skill.*
+
 ## Foco actual
 -
 

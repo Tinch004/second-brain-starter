@@ -9,6 +9,10 @@ Este vault de Obsidian es la memoria centralizada de tus proyectos más las skil
 2. Leer **`~/.agents/skills/update-project-memory/SKILL.md`** (mirroreada en `~/.codex/skills/`) — sección **"Reglas aprendidas"**: es el log real de decisiones de arquitectura del vault. No proponer de nuevo algo que ya está ahí resuelto.
 3. El resto de esa misma skill tiene el proceso completo de cómo se escribe memoria de proyecto — es la fuente de verdad operativa, no un doc aparte.
 
+## Detección del proyecto actual
+
+Orden de precedencia completo en la sección "Detección del proyecto actual" de la skill `update-project-memory` — no lo repitas de memoria ni lo reinterpretes, léelo de ahí. Resumen de una línea: repo propio con su `AGENTS.md` ya declarándolo → si no, archivo en contexto bajo `01-Projects/<proyecto>/...` → si no, match de cwd/remote contra `01-Projects/Projects-index.md` → si sigue ambiguo, una sola pregunta corta.
+
 ## Reglas duras de este vault (resumen — el detalle está en la skill)
 
 - Ningún archivo de proyecto se llama `_status.md`/`todos.md`/`decisions.md`/`context.md` a secas — siempre `<proyecto>-<tipo>.md`.
