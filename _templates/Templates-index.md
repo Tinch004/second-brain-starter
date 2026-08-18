@@ -8,3 +8,4 @@ Plantillas base para armar un proyecto nuevo — las usa la skill [[SKILL|update
 - [[decision-entry-template|decision-entry-template]] — base de `<proyecto>-decisions.md`
 - [[todos-template|todos-template]] — base de `<proyecto>-todos.md`
 - [[project-agents-template|project-agents-template]] — base del `AGENTS.md`/`CLAUDE.md` que se copia al repo de cada proyecto (no al vault), apuntando de vuelta a su carpeta acá
+- [[learning-entry-template|learning-entry-template]] — base de una entry en `<proyecto>-learnings.md`, `Domain-learnings.md` o `Workstyle-learnings.md` (Experience Learning)

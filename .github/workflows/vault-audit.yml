@@ -115,7 +115,7 @@ jobs:
 
       - name: Memory health (informativo, no bloquea el build)
         run: |
-          # TODOs estancados, status posiblemente viejo, decisiones sin **Estado:**.
+          # TODOs estancados, status posiblemente viejo, decisiones/learnings sin **Estado:**.
           # A diferencia de los steps anteriores, esto NUNCA hace exit 1 -- staleness no es un bug,
           # es una senal para que un agente/usuario la revise cuando corresponda. Nunca se corrige
           # solo: solo se senala (ver "Memory health" en SKILL.md).
@@ -155,7 +155,10 @@ jobs:
             fi
           done < <(find . -name "*-status.md" -not -path "*/.obsidian/*" -not -path "*/.github/*" -print0)
 
-          echo "--- Decisiones sin campo **Estado:** ---"
+          echo "--- Decisiones/learnings sin campo **Estado:** ---"
+          # Mismo chequeo estructural para -decisions.md y para los 3 archivos de Experience Learning
+          # (<project>-learnings.md, Domain-learnings.md, Workstyle-learnings.md) -- todos usan el mismo
+          # patron de entry "## fecha - titulo" + "**Estado:**", asi que el mismo awk sirve para los cuatro.
           while IFS= read -r -d '' f; do
             awk '
               /^## / {
@@ -165,6 +168,6 @@ jobs:
               /^\*\*Estado:\*\*/ { has_estado=1 }
               END { if (title != "" && !has_estado) print FILENAME": \""title"\" sin **Estado:**" }
             ' "$f"
-          done < <(find . -name "*-decisions.md" -not -path "*/.obsidian/*" -not -path "*/.github/*" -print0)
+          done < <(find . \( -name "*-decisions.md" -o -name "*-learnings.md" -o -name "Domain-learnings.md" -o -name "Workstyle-learnings.md" \) -not -path "*/.obsidian/*" -not -path "*/.github/*" -print0)
 
           echo "Memory health: chequeo informativo completo (no bloquea el build)."
