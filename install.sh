@@ -40,10 +40,10 @@ fi
 # 4) Instalar la skill en Claude Code y Codex (mirroreada)
 SKILL_SRC="$VAULT_PATH/skill/update-project-memory"
 mkdir -p "$HOME/.agents/skills/update-project-memory" "$HOME/.codex/skills/update-project-memory"
-cp "$SKILL_SRC/SKILL.md" "$HOME/.agents/skills/update-project-memory/SKILL.md"
-cp "$SKILL_SRC/SKILL.md" "$HOME/.codex/skills/update-project-memory/SKILL.md"
-cp "$SKILL_SRC/reglas-aprendidas.md" "$HOME/.agents/skills/update-project-memory/reglas-aprendidas.md"
-cp "$SKILL_SRC/reglas-aprendidas.md" "$HOME/.codex/skills/update-project-memory/reglas-aprendidas.md"
+for f in SKILL.md reglas-aprendidas.md work-graph.md learnings.md; do
+  cp "$SKILL_SRC/$f" "$HOME/.agents/skills/update-project-memory/$f"
+  cp "$SKILL_SRC/$f" "$HOME/.codex/skills/update-project-memory/$f"
+done
 echo "Skill 'update-project-memory' instalada en Claude Code y Codex."
 
 cat <<EOF

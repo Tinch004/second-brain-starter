@@ -47,10 +47,10 @@ $claudeSkills = "$HOME\.agents\skills\update-project-memory"
 $codexSkills = "$HOME\.codex\skills\update-project-memory"
 New-Item -ItemType Directory -Force -Path $claudeSkills | Out-Null
 New-Item -ItemType Directory -Force -Path $codexSkills | Out-Null
-Copy-Item "$skillSrc\SKILL.md" -Destination $claudeSkills -Force
-Copy-Item "$skillSrc\SKILL.md" -Destination $codexSkills -Force
-Copy-Item "$skillSrc\reglas-aprendidas.md" -Destination $claudeSkills -Force
-Copy-Item "$skillSrc\reglas-aprendidas.md" -Destination $codexSkills -Force
+foreach ($f in @("SKILL.md", "reglas-aprendidas.md", "work-graph.md", "learnings.md")) {
+  Copy-Item "$skillSrc\$f" -Destination $claudeSkills -Force
+  Copy-Item "$skillSrc\$f" -Destination $codexSkills -Force
+}
 Write-Host "Skill 'update-project-memory' instalada en Claude Code y Codex." -ForegroundColor Green
 
 Write-Host ""
