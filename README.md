@@ -159,6 +159,8 @@ skill/
   update-project-memory/
     SKILL.md
     reglas-aprendidas.md
+    work-graph.md
+    learnings.md
 ```
 
 Los proyectos empiezan con una estructura mínima y los archivos opcionales —como `-learnings.md`— se crean de forma perezosa cuando realmente hacen falta.
