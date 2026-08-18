@@ -1,5 +1,12 @@
 ---
 id: {{id-congelado-al-crear-el-proyecto-nunca-cambia}}
+# type: project  # opcional, default implícito "project" si se omite — valor libre (client, campaign, product, research, etc.)
+# Relaciones opcionales — wikilinks SIEMPRE entre comillas, sin comillas rompe el YAML. Una sola dirección, nunca la inversa. Ver "Unidad de trabajo y relaciones" en la skill.
+# depends-on: `["[[otro-proyecto-status]]"]`
+# blocked-by: `["[[otro-proyecto-status]]"]`
+# related-to: `["[[otro-proyecto-status]]"]`
+# supersedes: `["[[otro-proyecto-status]]"]`
+# parent: `"[[otro-proyecto-status]]"`
 ---
 
 # {{proyecto}} — estado

@@ -61,3 +61,54 @@ jobs:
             exit 1
           fi
           echo "OK: ningun patron de secreto detectado."
+
+      - name: Chequear salud basica del Work Graph
+        run: |
+          # Relaciones vivas en el frontmatter de *-status.md (parent/depends-on/blocked-by/related-to/supersedes).
+          # Los links rotos ya los cubre el step de arriba (una relacion es un [[link]] mas). Esto solo agrega
+          # lo que ese step no puede ver: self-reference y ciclos directos de depends-on (A<->B).
+          # Soporta relaciones en YAML flow-style (misma linea) y block-style (lista indentada debajo de la clave).
+          # find -print0 + read -d '' (no "for f in $(find ...)") porque este mismo archivo ya evita word-splitting
+          # con paths que tienen espacios en los otros steps — mismo criterio aca.
+          ERRORS=0
+          > /tmp/depends_pairs.txt
+
+          while IFS= read -r -d '' f; do
+            name=$(basename "$f" .md)
+            fm=$(awk '/^---$/{c++; next} c==1' "$f")
+
+            # Self-reference: cualquier wikilink en cualquier campo de relacion que apunte a la propia nota.
+            # No hace falta distinguir de que campo viene — un self-reference es invalido en los 5 por igual.
+            all_targets=$(echo "$fm" | grep -oE '\[\[[^]|#]+' | sed -E 's/\[\[//; s#.*/##; s/\|.*//')
+            if [ -n "$all_targets" ] && echo "$all_targets" | grep -qxF "$name"; then
+              echo "::error::Self-reference en $f: una relacion apunta a si misma ($name)"
+              ERRORS=1
+            fi
+
+            # depends-on especificamente, para el chequeo de circularidad: capturar la linea de la clave (por si
+            # trae el valor inline) mas cualquier linea indentada debajo (lista en block-style), hasta la proxima
+            # clave de primer nivel.
+            dep_block=$(echo "$fm" | awk '
+              /^depends-on:/ { in_dep=1; print; next }
+              /^[A-Za-z0-9_-]+:/ { in_dep=0 }
+              in_dep && /^[[:space:]]/ { print; next }
+            ')
+            dep_targets=$(echo "$dep_block" | grep -oE '\[\[[^]|#]+' | sed -E 's/\[\[//; s#.*/##; s/\|.*//')
+            for t in $dep_targets; do
+              echo "$name|$t" >> /tmp/depends_pairs.txt
+            done
+          done < <(find . -name "*-status.md" -not -path "*/.obsidian/*" -not -path "*/.github/*" -print0)
+
+          while IFS='|' read -r a b; do
+            [ -z "$a" ] && continue
+            [ "$a" = "$b" ] && continue  # self-reference ya se reporta arriba, no es un "ciclo" separado
+            if grep -qxF "$b|$a" /tmp/depends_pairs.txt; then
+              echo "::error::depends-on circular directo entre $a y $b"
+              ERRORS=1
+            fi
+          done < /tmp/depends_pairs.txt
+
+          if [ "$ERRORS" = "1" ]; then
+            exit 1
+          fi
+          echo "OK: sin self-reference ni depends-on circular directo en el Work Graph."
