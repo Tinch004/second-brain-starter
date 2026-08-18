@@ -1,63 +1,213 @@
-# Segundo cerebro para Claude Code + Codex
+# Second Brain for AI Work
 
-Memoria persistente, compartida entre agentes, guardada como markdown plano en un vault de Obsidian — navegable como un grafo, no como una pila de archivos sueltos.
+Memoria operativa persistente, compartida y eficiente en tokens para trabajar con agentes de IA.
+
+`second-brain-starter` usa Markdown + Obsidian + Git como fuente de verdad para que Claude Code, Codex y otros agentes puedan retomar trabajo sin reconstruir contexto desde cero, recordar qué se decidió, qué falta y qué se aprendió trabajando.
+
+> **La idea central:** continuar exactamente donde quedó el trabajo usando la mínima cantidad de contexto necesaria.
 
 ## El problema que resuelve
 
-Cada sesión nueva de un agente de código arranca en cero: o le reexplicás el proyecto de nuevo, o el agente se pone a explorar el repo entero para reconstruir contexto que ya tenía la sesión anterior. Las dos cuestan tiempo y tokens. Y si usás Claude Code un día y Codex al siguiente, ninguno de los dos sabe lo que hizo el otro.
+Una sesión nueva de un agente normalmente arranca casi en cero: o le reexplicás el proyecto, o vuelve a explorar archivos, commits y decisiones que otro agente ya había entendido. Eso cuesta tiempo y tokens, y empeora cuando alternás entre agentes o máquinas.
 
-Este starter resuelve eso con una idea simple: la memoria no vive en la conversación ni en un repo de código — vive en un vault de Obsidian, conectado por links reales (no carpetas sueltas), que ambos agentes leen y escriben a través del mismo MCP.
+Este starter separa la memoria del chat y de los repos de código. La memoria vive en un vault de Obsidian, versionado con Git, enlazado como grafo y escrito en Markdown legible tanto por humanos como por agentes.
+
+No intenta guardar toda tu vida ni convertir Obsidian en una plataforma gigante. Está orientado a **trabajo**: proyectos, tareas, decisiones, bloqueos, relaciones, contexto y experiencia acumulada.
 
 ## Qué te da
 
-- **Vault en PARA** (Proyectos / Skills / Recursos / Archivo / Inbox) — estructura chata, nombres únicos, pensada para que un agente encuentre algo sin tener que razonar de más, no para que se vea linda.
-- **Una skill** (`update-project-memory`) que le dice al agente cuándo guardar memoria, cómo nombrar archivos, cuándo actuar solo y cuándo preguntar — y que se va agrandando sola con cada decisión nueva que tomes, en una sección "Reglas aprendidas" append-only.
-- **Cross-agente de verdad**: la misma skill mirroreada para Claude Code y Codex, el mismo vault conectado por MCP a los dos — no hay que elegir uno.
-- **Git incluido**: el vault es su propio repo, con las reglas de pull-antes-de-leer y commit+push-al-guardar ya escritas en la skill — para que dos agentes (o dos máquinas) trabajando en paralelo no se pisen.
-- **`_raw/`**: guarda la fuente cruda antes de compilarla en una nota — nunca perdés el original.
-- **Instalación de un comando** para todo lo que se puede automatizar; los 5 clicks que Obsidian obliga a hacer a mano (por seguridad de la propia app, no hay forma de saltearlos) quedan documentados paso a paso.
+### Continuidad entre agentes
 
-## Filosofía — en qué se diferencia de otros starters parecidos
+Cada unidad de trabajo mantiene una foto actual y una memoria larga separadas:
 
-Hay proyectos más grandes y con más funcionalidad para esto (comandos explícitos, wikis organizadas por tipo de entidad, boards Kanban). Este es deliberadamente más chico:
+- `status` — foco actual, bloqueos y próximos pasos;
+- `todos` — tareas activas, bloqueadas y hechas;
+- `decisions` — decisiones importantes y por qué se tomaron;
+- `context` — continuidad histórica de sesiones;
+- `learnings` — experiencia reutilizable cuando realmente aparece un patrón.
 
-- **Implícito, no por comandos** — el agente reconoce cuándo guardar memoria por el contexto de la conversación, vos no tenés que acordarte de invocar nada.
-- **PARA por función, no wiki por tipo de entidad** — menos elegante en el papel, más rápido de recorrer para un agente que tiene que decidir "¿esto es un proyecto, una skill, o un recurso?" en una sola pasada.
-- **Pocas piezas móviles** — menos superficie para que algo quede inconsistente sin que nadie lo note.
+El agente puede detectar el proyecto actual por `AGENTS.md`, contexto del vault, carpeta de trabajo o remote Git. Un proyecto existente puede incorporarse con un onboarding acotado sin escanear el repo entero.
 
-No es "mejor" en abstracto — es la forma que funcionó bien iterando esto en la práctica, no la que suena más completa en una lista de features.
+### Retrieval eficiente en tokens
+
+La memoria se recupera por capas y se detiene cuando ya alcanza:
+
+```text
+L0   project card / índice
+L1   status + todos
+L1.5 learnings relevantes
+L2   decisions + módulos puntuales
+L3   context + _raw (cold storage)
+```
+
+Reglas centrales:
+
+- buscar antes de leer archivos completos;
+- leer solo la sección necesaria cuando sea posible;
+- no abrir `context`, `_raw` o decisiones históricas "por las dudas";
+- después de cada capa, evaluar si ya hay contexto suficiente;
+- cargar learnings por scope, no todos juntos.
+
+La idea no es comprimir todo en un resumen gigante: es **recuperar menos y mejor**.
+
+### Experience Learning
+
+El sistema no solo recuerda qué pasó: puede convertir experiencia repetida en reglas cortas reutilizables para no volver a descubrir lo mismo.
+
+Hay tres niveles:
+
+- **System Learnings** — cómo funciona y se mantiene el propio second brain;
+- **Workstyle Learnings** — cómo trabaja una persona o equipo;
+- **Project / Domain Learnings** — errores recurrentes, edge cases, soluciones probadas y patrones reutilizables.
+
+Una primera observación puede quedarse solo en `context`. Si reaparece o tiene evidencia suficiente, puede convertirse en `candidate`, luego `confirmed`, ser reemplazada con trazabilidad o promoverse de proyecto a dominio.
+
+La regla más importante es simple:
+
+> Si un learning no cambiaría una futura decisión, diagnóstico, implementación o workflow, probablemente no merece existir.
+
+### Work Model + Work Graph
+
+El core no asume que todo trabajo es software.
+
+Cada unidad puede declarar un `type` libre y relaciones opcionales como:
+
+- `parent`
+- `depends-on`
+- `blocked-by`
+- `related-to`
+- `supersedes`
+
+Las relaciones usan wikilinks canónicos y los backlinks se derivan por búsqueda: no se mantienen dos direcciones manualmente.
+
+Esto permite modelar tanto un proyecto técnico como un cliente, campaña, producto, investigación o proceso sin crear una ontología rígida.
+
+**El core conoce trabajo. El profile conoce el oficio.**
+
+### Work Profiles
+
+Los profiles adaptan vocabulario, evidencia y criterios sin duplicar el core ni crear otra arquitectura por profesión.
+
+Incluye guías iniciales para:
+
+- Developer
+- Agency / Marketing
+- Product
+- Ops / Consulting
+
+Un profile es documentación scoped que el agente consulta solo cuando corresponde. No cambia los archivos core, los Steps ni el CI.
+
+### Memory Health
+
+GitHub Actions audita automáticamente problemas estructurales y señales de mantenimiento, entre ellas:
+
+- notas huérfanas y links rotos;
+- nombres inválidos;
+- secretos de alta confianza en Markdown;
+- relaciones rotas o ciclos directos evidentes en el Work Graph;
+- TODOs posiblemente estancados;
+- status posiblemente viejos;
+- decisiones/learnings sin estado cuando corresponde.
+
+Los chequeos semánticos ambiguos siguen siendo responsabilidad del agente: no hay un scanner que invente contradicciones o relaciones por similitud.
+
+### Cross-agent y portable
+
+La misma skill `update-project-memory` se instala para Claude Code y Codex, y el vault sigue siendo Markdown normal: no depende de una base vectorial, un daemon ni una conversación específica.
+
+Git sincroniza el estado entre agentes y máquinas con reglas explícitas de:
+
+- pull antes de leer;
+- staging puntual;
+- commit/push al guardar memoria real;
+- resolución de conflictos sin force-push.
+
+### `_raw/`
+
+La fuente original se guarda antes de compilarla en memoria estructurada. Las notas derivadas apuntan de vuelta al material original para poder verificar o recompilar conocimiento sin depender de la sesión que lo procesó.
+
+## Filosofía
+
+Este proyecto es deliberadamente más chico que otros sistemas de "second brain" que agregan bases vectoriales, chats internos, feeds, calendarios, pipelines permanentes o decenas de comandos.
+
+Acá las decisiones son otras:
+
+- **Work-first** — memoria laboral, no life OS.
+- **Markdown-first** — la fuente de verdad sigue siendo legible y portable.
+- **Implícito, no command-driven** — el agente reconoce cuándo corresponde guardar memoria.
+- **Search/index first, details later** — gastar contexto solo cuando la tarea lo justifica.
+- **Curated memory** — no guardar cada tool call ni cada pensamiento como memoria permanente.
+- **Evidence over recollection** — cuando hay repo Git, el estado se contrasta con evidencia real antes de escribir memoria.
+- **Few moving parts** — no sumar infraestructura hasta que exista una necesidad concreta.
+- **No duplicar Graphify** — este vault modela conocimiento y trabajo; Graphify sigue siendo el lugar para dependencias internas de código.
+
+## Estructura
+
+```text
+Home.md
+00-Inbox/
+01-Projects/
+02-Skills/
+03-Resources/
+04-Archive/
+_profiles/
+_templates/
+_raw/
+AGENTS.md
+CLAUDE.md
+skill/
+  update-project-memory/
+    SKILL.md
+    reglas-aprendidas.md
+```
+
+Los proyectos empiezan con una estructura mínima y los archivos opcionales —como `-learnings.md`— se crean de forma perezosa cuando realmente hacen falta.
 
 ## Instalación
 
-**Windows:**
+### Windows
+
 ```powershell
 irm https://raw.githubusercontent.com/Tinch004/second-brain-starter/main/install.ps1 | iex
 ```
 
-**Mac / Linux:**
+### macOS / Linux
+
 ```bash
 curl -fsSL https://raw.githubusercontent.com/Tinch004/second-brain-starter/main/install.sh | bash
 ```
 
-Guía completa, con los pasos manuales de Obsidian explicados uno por uno: **[SETUP.md](./SETUP.md)**.
+La guía completa, incluidos los pasos manuales que Obsidian requiere para habilitar plugins y conectar el MCP, está en **[SETUP.md](./SETUP.md)**.
 
-## Estructura
+## Qué no intenta ser
 
-```
-Home.md                                — hub, punto de entrada
-00-Inbox/                              — captura rápida sin clasificar
-01-Projects/                           — tus proyectos
-02-Skills/                             — agent skills, agrupadas por dominio
-03-Resources/                          — referencias y técnicas reutilizables
-04-Archive/                            — proyectos cerrados
-_templates/                            — plantillas para proyecto nuevo
-_raw/                                  — fuente cruda antes de compilar
-AGENTS.md / CLAUDE.md                  — contexto de agente del vault mismo
-skill/update-project-memory/SKILL.md   — la skill a instalar en tus agentes
-```
+No busca reemplazar:
 
-Todo arranca vacío — se llena con tu primer proyecto real, no con datos de ejemplo.
+- un code graph;
+- un gestor completo de proyectos;
+- un RAG/vector database;
+- un calendario personal;
+- un sistema de journaling;
+- un agregador de X/YouTube/feeds;
+- un "segundo cerebro para toda la vida".
+
+Su objetivo es más específico:
+
+> **Que un agente pueda retomar trabajo, entender qué importa y aprovechar experiencia previa sin hacerte pagar otra vez los mismos tokens.**
+
+## Estado
+
+El starter ya incluye las seis capas de evolución iniciales:
+
+1. Continuity
+2. Token Efficiency
+3. Work Model + Work Graph
+4. Intelligence / Memory Health
+5. Experience Learning
+6. Work Profiles
+
+A partir de acá, la prioridad es endurecerlo con uso real, medir retrieval y mantener el core chico antes de sumar infraestructura nueva.
 
 ## Licencia
 
-MIT — usalo, modificalo, pasáselo a quien quieras.
+MIT — usalo, modificalo y adaptalo a tu forma de trabajar.
