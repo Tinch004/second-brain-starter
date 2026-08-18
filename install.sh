@@ -42,6 +42,8 @@ SKILL_SRC="$VAULT_PATH/skill/update-project-memory"
 mkdir -p "$HOME/.agents/skills/update-project-memory" "$HOME/.codex/skills/update-project-memory"
 cp "$SKILL_SRC/SKILL.md" "$HOME/.agents/skills/update-project-memory/SKILL.md"
 cp "$SKILL_SRC/SKILL.md" "$HOME/.codex/skills/update-project-memory/SKILL.md"
+cp "$SKILL_SRC/reglas-aprendidas.md" "$HOME/.agents/skills/update-project-memory/reglas-aprendidas.md"
+cp "$SKILL_SRC/reglas-aprendidas.md" "$HOME/.codex/skills/update-project-memory/reglas-aprendidas.md"
 echo "Skill 'update-project-memory' instalada en Claude Code y Codex."
 
 cat <<EOF

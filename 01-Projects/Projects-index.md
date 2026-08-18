@@ -2,6 +2,8 @@
 
 [[Home]] ·
 
+**L0** de la recuperación en capas de la skill (ver "Cómo orientarte" en `update-project-memory`): el bullet de cada proyecto acá es la card ultracompacta — de dónde se parte antes de abrir la carpeta del proyecto. `Home.md` enlaza acá en vez de duplicar la lista.
+
 Los proyectos de programación activos que este vault trackea. Cada uno vive en su propia carpeta `01-Projects/<proyecto>/` con `<proyecto>-status.md` (estado actual, punto de entrada), `<proyecto>-todos.md` (tareas activas/bloqueadas/hechas en checkboxes, consultable con Dataview), `<proyecto>-decisions.md` (decisiones de arquitectura) y, si tuvo sesiones de trabajo real, `<proyecto>-context.md` (log de continuidad). Los módulos/componentes reales de cada proyecto son sub-nodos en `<proyecto>/modules/`, indexados desde el propio `-status.md` — no hay un índice separado de módulos, el `-status.md` ya cumple ese rol.
 
 ## Proyectos

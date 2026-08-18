@@ -6,7 +6,7 @@ Este vault de Obsidian es la memoria centralizada de tus proyectos más las skil
 
 0. **Primero, siempre**: `git pull` acá mismo (si este vault es un repo git propio) — puede haber cambios de otra sesión o máquina que todavía no llegaron a este checkout.
 1. Leer **[[Home]]** — es el hub, tiene el mapa completo de carpetas.
-2. Leer **`~/.agents/skills/update-project-memory/SKILL.md`** (mirroreada en `~/.codex/skills/`) — sección **"Reglas aprendidas"**: es el log real de decisiones de arquitectura del vault. No proponer de nuevo algo que ya está ahí resuelto.
+2. Leer **`~/.agents/skills/update-project-memory/reglas-aprendidas.md`** (mirroreada en `~/.codex/skills/`, vive junto a `SKILL.md`) — es el log real de decisiones de arquitectura del vault. No proponer de nuevo algo que ya está ahí resuelto.
 3. El resto de esa misma skill tiene el proceso completo de cómo se escribe memoria de proyecto — es la fuente de verdad operativa, no un doc aparte.
 
 ## Detección del proyecto actual
@@ -26,4 +26,4 @@ Orden de precedencia completo en la sección "Detección del proyecto actual" de
 
 ## Memoria del vault mismo
 
-Este archivo no tiene un `-status.md` propio como los proyectos reales — la continuidad de "en qué está el vault" vive en la sección "Reglas aprendidas" de la skill (se lee como changelog: más reciente al final). Si una sesión de trabajo real cambia la arquitectura del vault, esa sección es donde se registra.
+Este archivo no tiene un `-status.md` propio como los proyectos reales — la continuidad de "en qué está el vault" vive en `reglas-aprendidas.md` (se lee como changelog: más reciente al final). Si una sesión de trabajo real cambia la arquitectura del vault, ese archivo es donde se registra.

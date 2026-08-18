@@ -3,7 +3,7 @@
 Punto de entrada al vault.
 
 ## Proyectos
-_(vacío — a medida que agregues proyectos, van acá con un link a su `<proyecto>-status.md`)_
+Lista completa (L0 — project cards) en [[Projects-index|01-Projects]]. No se duplica acá: un solo lugar canónico evita que quede desactualizado en dos partes a la vez.
 
 ## Skills — agent skills reales (Claude Code + Codex), no atadas a un proyecto
 Índice completo con qué hace cada una: [[Skills-index|02-Skills]], agrupadas por dominio.
