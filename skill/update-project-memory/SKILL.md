@@ -60,6 +60,18 @@ Para responder "¿qué depende de X?", "¿qué bloquea X?", "¿qué está relaci
 1. Lo que X declara de sí mismo ya lo tenés apenas abrís `X-status.md` (L1) — no hace falta buscar para eso.
 2. Para los vecinos que apuntan *hacia* X (la dirección inversa, no declarada en ningún lado): buscar `[[X-status` dentro de los campos de relación de todos los `*-status.md` del vault — con el MCP (`search_query`) si está disponible, o `grep -rl '\[\[X-status' 01-Projects --include="*-status.md"` si no. El resultado son los nombres de archivo que la mencionan; recién ahí, si hace falta más detalle que el nombre, se abre el `-status.md` puntual de cada uno — nunca todos de una.
 
+## Memory health (informativo, nunca automático)
+
+Tres chequeos determinísticos, baratos (comparar fechas/campos, no juicio semántico), que corren solos en cada push (`vault-audit.yml`, step "Memory health") y también se pueden revisar a mano en cualquier momento:
+
+- **TODOs estancados**: un ítem de `- [ ]` en "Activos" con fecha de alta de más de 30 días. Ítems sin fecha (legacy, de antes de la convención) se ignoran en silencio, no rompen nada.
+- **Status posiblemente viejo**: `Actualizado:` de más de 60 días en `-status.md`.
+- **Decisiones sin `**Estado:**`**: una entry de `-decisions.md` que no tiene ese campo — normalmente porque predata la convención (sesión 16/08).
+
+Regla dura: esto **nunca bloquea el build ni corrige nada solo** — a diferencia de los demás steps de la CI (huérfanas/rotos/README/secretos/self-reference/circular, que sí fallan el push), este es puramente informativo (`::notice::`, no `::error::`). Un TODO viejo o un status desactualizado no es un bug — es una señal para que un agente o el usuario lo revise cuando corresponda, nunca algo para tocar sin que se pida. Si un agente ve una señal de estas al orientarse en un proyecto (L1), puede mencionarla en una línea, pero no reescribe `-status.md`/`-todos.md`/`-decisions.md` solo por esto.
+
+**Deliberadamente fuera de esta fase** (quedan para Fase 5, Experience Learning): detectar contradicciones entre notas, patrones repetidos entre proyectos, y candidatos a convertirse en skill/resource — los tres requieren criterio semántico, no una comparación de fechas, y los dos últimos son literalmente el mecanismo de "cross-project learning" y promoción a skill/resource que esa fase futura va a diseñar con su propio lifecycle (`observed`/`candidate`/`confirmed`/`superseded`); construir una versión ad-hoc ahora arriesga no encajar con ese diseño después — mismo criterio que ya se aplicó para diferir "candidate links" en la fase anterior.
+
 ## Detección del proyecto actual
 
 Antes de asumir de qué proyecto se está hablando, resolvé en este orden (parar en el primero que aplique):

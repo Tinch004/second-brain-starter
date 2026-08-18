@@ -112,3 +112,59 @@ jobs:
             exit 1
           fi
           echo "OK: sin self-reference ni depends-on circular directo en el Work Graph."
+
+      - name: Memory health (informativo, no bloquea el build)
+        run: |
+          # TODOs estancados, status posiblemente viejo, decisiones sin **Estado:**.
+          # A diferencia de los steps anteriores, esto NUNCA hace exit 1 -- staleness no es un bug,
+          # es una senal para que un agente/usuario la revise cuando corresponda. Nunca se corrige
+          # solo: solo se senala (ver "Memory health" en SKILL.md).
+          # set +e / +pipefail explicito: el shell default de Actions corre run: con -e -o pipefail,
+          # y un grep que no matchea (ej. un item legacy sin fecha -- el caso mas comun, documentado
+          # como "se ignora en silencio") mataria el step entero a mitad de camino sin esto. Todo el
+          # punto de este step es no abortar nunca, asi que se desactiva para todo el bloque.
+          set +e
+          set +o pipefail
+          HOY=$(date -u +%s)
+          UMBRAL_TODOS=30
+          UMBRAL_STATUS=60
+
+          echo "--- TODOs en 'Activos' sin fecha reciente (> $UMBRAL_TODOS dias) ---"
+          while IFS= read -r -d '' f; do
+            awk '/^## Activos/{a=1;next} /^## /{a=0} a' "$f" | grep -E '^- \[ \]' | while IFS= read -r line; do
+              # Fecha de alta va SIEMPRE entre parentesis al final de la linea (convencion de _templates/todos-template.md)
+              # -- ancla asi para no confundirla con una fecha mencionada en el texto de la tarea.
+              d=$(echo "$line" | grep -oE '\([0-9]{4}-[0-9]{2}-[0-9]{2}\)[[:space:]]*$' | grep -oE '[0-9]{4}-[0-9]{2}-[0-9]{2}')
+              [ -z "$d" ] && continue
+              ts=$(date -u -d "$d" +%s 2>/dev/null) || continue
+              dias=$(( (HOY - ts) / 86400 ))
+              if [ "$dias" -gt "$UMBRAL_TODOS" ]; then
+                echo "::notice::$f: $dias dias desde la fecha del item -> $line"
+              fi
+            done
+          done < <(find . -name "*-todos.md" -not -path "*/.obsidian/*" -not -path "*/.github/*" -print0)
+
+          echo "--- Status sin actualizar (> $UMBRAL_STATUS dias) ---"
+          while IFS= read -r -d '' f; do
+            d=$(grep -oE 'Actualizado: *[0-9]{4}-[0-9]{2}-[0-9]{2}' "$f" | head -1 | grep -oE '[0-9]{4}-[0-9]{2}-[0-9]{2}')
+            [ -z "$d" ] && continue
+            ts=$(date -u -d "$d" +%s 2>/dev/null) || continue
+            dias=$(( (HOY - ts) / 86400 ))
+            if [ "$dias" -gt "$UMBRAL_STATUS" ]; then
+              echo "::notice::$f: sin actualizar hace $dias dias (Actualizado: $d)"
+            fi
+          done < <(find . -name "*-status.md" -not -path "*/.obsidian/*" -not -path "*/.github/*" -print0)
+
+          echo "--- Decisiones sin campo **Estado:** ---"
+          while IFS= read -r -d '' f; do
+            awk '
+              /^## / {
+                if (title != "" && !has_estado) print FILENAME": \""title"\" sin **Estado:**"
+                title=$0; has_estado=0; next
+              }
+              /^\*\*Estado:\*\*/ { has_estado=1 }
+              END { if (title != "" && !has_estado) print FILENAME": \""title"\" sin **Estado:**" }
+            ' "$f"
+          done < <(find . -name "*-decisions.md" -not -path "*/.obsidian/*" -not -path "*/.github/*" -print0)
+
+          echo "Memory health: chequeo informativo completo (no bloquea el build)."
