@@ -1,6 +1,7 @@
 ---
 id: {{id-congelado-al-crear-el-proyecto-nunca-cambia}}
 # type: project  # opcional, default implícito "project" si se omite — valor libre (client, campaign, product, research, etc.)
+# profile: developer  # opcional, sin default — solo vocabulario, ver `_profiles/` y "Perfiles de trabajo" en la skill. No declararlo no cambia nada.
 # Relaciones opcionales — wikilinks SIEMPRE entre comillas, sin comillas rompe el YAML. Una sola dirección, nunca la inversa. Ver "Unidad de trabajo y relaciones" en la skill.
 # depends-on: `["[[otro-proyecto-status]]"]`
 # blocked-by: `["[[otro-proyecto-status]]"]`

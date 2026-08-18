@@ -14,6 +14,7 @@ Lista completa (L0 — project cards) en [[Projects-index|01-Projects]]. No se d
 - [[Resources-index|03-Resources]] — referencias/material reusable
 - [[Archive-index|04-Archive]] — proyectos cerrados
 - [[Templates-index|_templates]] — base para proyectos nuevos
+- [[Profiles-index|_profiles]] — guías de vocabulario por dominio (no cambian el core)
 - [[Raw-index|_raw]] — fuente cruda inmutable, antes de compilarse en una nota
 
 ## Regla de nombres
